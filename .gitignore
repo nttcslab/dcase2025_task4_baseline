@@ -1,0 +1,9 @@
+workspace/
+*.pyc
+*.ckpt
+cci/
+.ipynb_checkpoints
+*.pth
+thien/
+*.pdf
+*.png
