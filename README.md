@@ -1,11 +1,13 @@
 ### References
 UPDATING
 
-### Environments
+### Setting
+Environment
 ```
-conda create -n evn_name python=3.11
-conda activate env_name
-pip install -r requirements.txt
+git clone https://github.com/nttcslab/dcase2025_task4_baseline.git
+cd dcase2025_task4_baseline
+conda env create -f environment.yml
+conda activate dcase2025t4
 
 git clone https://github.com/iranroman/SpatialScaper.git
 cd SpatialScaper
@@ -21,8 +23,6 @@ unzip ckpt/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly.zip -d ckpt
 
 ### Data
 UPDATING
-
-
 
 
 ### Training
