@@ -8,8 +8,6 @@ import importlib
 import pytz
 import torch
 
-from pytorch_lightning.utilities.rank_zero import rank_zero_only
-
 LABELS = {
     'eusipco25': [ # fixed order for multi-hot vector
             "alarm_clock", "baby_cry", "birds_chirping", "cat", "car_horn",
