@@ -36,3 +36,8 @@ python -m src.train -c config/label/m2dat_head.yaml -w workspace/label
 # continue fine-tune the last two blocks of the backbone, replace the BEST_EPOCH_NUMBER
 python -m src.train -c config/label/m2dat_head_2blks.yaml -w workspace/label -r workspace/label/m2dat_head/checkpoints/epoch=BEST_EPOCH_NUMBER.ckpt
 ```
+
+### Evaluating baseline checkpoint
+```
+python -m src.evaluation.evaluation -c src/evaluation/eval_configs/UPDATING.yaml
+```
