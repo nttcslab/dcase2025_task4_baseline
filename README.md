@@ -39,5 +39,8 @@ python -m src.train -c config/label/m2dat_head_2blks.yaml -w workspace/label -r 
 
 ### Evaluating baseline checkpoint
 ```
-python -m src.evaluation.evaluation -c src/evaluation/eval_configs/UPDATING.yaml
+python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.yaml
+
+# Evaluate and generate estimated waveform waveforms
+python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.yaml --generate_waveform
 ```
