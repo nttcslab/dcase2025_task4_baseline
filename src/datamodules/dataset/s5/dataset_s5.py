@@ -46,10 +46,14 @@ class DatasetS5(torch.utils.data.Dataset):
             self.metadata_dir = os.path.dirname(config)
             with open(config) as f:
                 self.data = json.load(f);
+            with open(os.path.join(self.metadata_dir, self.data[0]['metadata_path'])) as f:
+                one_ss_config = json.load(f);
+                self.sr = one_ss_config['config']['sr']
             self.dataset_length = len(self.data)
         else:
             self.from_metadata = False
             self.spatialscaper = config['spatialscaper']
+            self.sr = config['spatialscaper']['sr']
             self.snr_range = config['snr_range']
             self.nevent_range = config['nevent_range']
             self.dataset_length = config['dataset_length']
@@ -61,7 +65,7 @@ class DatasetS5(torch.utils.data.Dataset):
         self.label_onehots['silence'] = torch.zeros(self.onehots.size(1), requires_grad=False,  dtype=torch.float32)
 
         self.collate_fn = collate_fn
-    
+
     def get_onehot(self, label):
         return self.label_onehots[label]
 
@@ -111,11 +115,15 @@ class DatasetS5(torch.utils.data.Dataset):
             even_order = self.data[idx]['ref_event']
             assert set(even_order) == set(output['labels'])
             indices_order = [output['labels'].index(label) for label in even_order]
+            if 'index' in self.data[idx]:
+                soundscape_name = '%04d'%(int(self.data[idx]['index']))
+            else: soundscape_name = '%04d'%(idx)
         else:
             indices_order = list(range(len(output['labels'])))
             if self.shuffle_label:
                 random.shuffle(indices_order)
             even_order = [output['labels'][i] for i in indices_order]
+            soundscape_name = '%04d'%(idx)
 
         label_vector_all = torch.stack([self.get_onehot(label) for label in output['labels']]) # [nevent, nclass]
         label_vector_all = label_vector_all[indices_order, ...] # change order of sound events
@@ -128,6 +136,7 @@ class DatasetS5(torch.utils.data.Dataset):
             'mixture': torch.from_numpy(output['mixture'].transpose()).to(torch.float32), # [nch, wlen]
             'label_vector': label_vector_all, # [nevent, nclass], [nclass], or [nevent x nclass]
             'label': even_order, # list
+            'soundscape_name': soundscape_name, # compatible with evaluation function
         }
 
         if self.return_dry:

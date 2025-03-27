@@ -1,13 +1,15 @@
 dataset:
-    module: "src.datamodules.dataset.s5.dataset_s5"
-    main: "DatasetS5"
+    module: "src.datamodules.dataset.s5.dataset_s5_waveform"
+    main: "DatasetS5Waveform"
     args:
-        config: "/home/nguyenbt/data/dcase2025t4/metadata/reverbs_13e_50_5_20_valid.txt"
+        soundscape_dir: 'data/dev/test1/soundscape'
+        oracle_target_dir: 'data/dev/test1/oracle_target'
+        estimate_target_dir: 'data/dev/test1/generated' # if generate_waveform: estimated waveform will be generated to this dir
+                                                        # if use_generated_waveform: estimated waveform will be loaded from this dir
         n_sources: 3
         label_set: "dcase2025t4"
-        return_dry: true
         label_vector_mode: "concat"
-        checking: true
+        sr: 32000
 model:
     module: "src.models.s5.s5"
     main: "S5"
@@ -31,5 +33,5 @@ model:
                 output_channels: 1
                 target_sources_num: 3
                 label_len: 18
-        
-        
+
+

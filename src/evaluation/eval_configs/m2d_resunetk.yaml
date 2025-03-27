@@ -1,29 +1,31 @@
 dataset:
-    module: "src.datamodules.dataset.s5.dataset_s5"
-    main: "DatasetS5"
+    module: "src.datamodules.dataset.s5.dataset_s5_waveform"
+    main: "DatasetS5Waveform"
     args:
-        config: "/home/nguyenbt/data/dcase2025t4/metadata/reverbs_13e_50_5_20_valid.txt"
+        soundscape_dir: 'data/dev/test1/soundscape'
+        oracle_target_dir: 'data/dev/test1/oracle_target'
+        estimate_target_dir: 'data/dev/test1/generated' # if generate_waveform: estimated waveform will be generated to this dir
+                                                        # if use_generated_waveform: estimated waveform will be loaded from this dir
         n_sources: 3
         label_set: "dcase2025t4"
-        return_dry: true
         label_vector_mode: "concat"
-        checking: true
+        sr: 32000
 model:
     module: "src.models.s5.s5"
     main: "S5"
     args:
         label_set: "dcase2025t4"
-        tagger_ckpt: 'ckpt/dcase25/label_b/m2dat_bs128_lr1e3/epoch=8.ckpt'
-        separator_ckpt: 'ckpt/dcase25/separation/resunet_3out/epoch=9.ckpt'
-        
-        tagger_config: 
+        tagger_ckpt: 'ckpt/dcase25int/label/m2dat_head/epoch=105.ckpt'
+        separator_ckpt: 'ckpt/dcase25int/separation/resunetk/epoch=39.ckpt'
+
+        tagger_config:
             module: "src.models.m2dat.m2dat"
             main: "M2dAt"
             args:
                 ref_channel: 0
                 weight_file: "ckpt/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth"
                 num_classes: 18
-        separator_config: 
+        separator_config:
             module: "src.models.resunet2.resunet_mod"
             main: "ResUNet30"
             args:
@@ -31,5 +33,5 @@ model:
                 output_channels: 1
                 target_sources_num: 3
                 label_len: 54
-        
-        
+
+
