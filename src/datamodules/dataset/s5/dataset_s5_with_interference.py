@@ -42,7 +42,7 @@ class DatasetS5Interference(DatasetS5):
                     )
             # add background, make sure it is consistent with room
             if self.spatialscaper['background_dir']: # only add noise if there is background_dir
-                ssc.add_background(source_file = ('choose', []))
+                ssc.add_background(source_file = ('choose_wo_room_consistency', []))
         output = ssc.generate()
         assert(len(set(output['labels'])) == len(output['labels'])), 'duplicated sound events in the mixture'
         return output

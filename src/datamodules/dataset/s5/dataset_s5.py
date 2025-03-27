@@ -33,6 +33,7 @@ class DatasetS5(torch.utils.data.Dataset):
                  label_vector_mode='multihot', # multihot, concat, stack
                  checking=None, # return all the wet source, dry source, ir from spatial scaper
                 ):
+        super().__init__()
         self.checking = checking
         self.label_set = label_set
         self.config = config
@@ -93,7 +94,7 @@ class DatasetS5(torch.utils.data.Dataset):
             assert self.nevent_range[0] <= len(ssc.fg_events) <=self.nevent_range[1]
             # add background, make sure it is consistent with room
             if self.spatialscaper['background_dir']: # only add noise if there is background_dir
-                ssc.add_background(source_file = ('choose', []))
+                ssc.add_background(source_file = ('choose_wo_room_consistency', []))
         output = ssc.generate()
         assert(len(set(output['labels'])) == len(output['labels'])), 'duplicated sound events in the mixture'
         return output

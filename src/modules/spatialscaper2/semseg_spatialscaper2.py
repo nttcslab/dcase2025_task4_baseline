@@ -21,6 +21,7 @@ class SemgSegScaper2(SemgSegScaper):
         '''
         Generate a json file, which can be use to reconstruct the same soundscape
         '''
+        self.fg_events = sorted(self.fg_events, key=lambda x: x.event_time)
         data = {'config': self.config}
         data['fg_events'] = [event._asdict() for event in self.fg_events]
         data['bg_events'] = [event._asdict() for event in self.bg_events]

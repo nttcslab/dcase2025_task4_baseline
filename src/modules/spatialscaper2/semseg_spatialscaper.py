@@ -22,7 +22,7 @@ from spatialscaper.utils import (
     # db2multiplier,
     traj_2_ir_idx,
     find_indices_of_change,
-    IR_normalizer,    
+    IR_normalizer,
 )
 from spatialscaper.sofa_utils import load_rir_pos, load_pos
 # from spatialscaper.spatialize import spatialize
@@ -41,7 +41,11 @@ def db2multiplier(target_db, x):
     x: signal
     '''
     energy_db = 10*np.log10(np.mean(np.square(x)))
-    return 10 ** ((target_db - energy_db) / 20)
+    if not np.isfinite(energy_db):
+        warnings.warn(f'All-zero signals was used')
+        return 1
+    else:
+        return 10 ** ((target_db - energy_db) / 20)
 
 def spatialize(
     audio,
@@ -101,7 +105,7 @@ class SemgSegScaper(Scaper):
 
         # arguments of SemgSegScaper
         if 'ref_channel' not in kwargs: kwargs['ref_channel'] = 0
-        
+
         if 'return_dry' not in kwargs:
             kwargs['return_dry'] = False
         else: assert 'spatialize_direct_path_time_ms' in kwargs, 'spatialize_direct_path_time_ms must be specified when return_dry = True'
@@ -123,7 +127,7 @@ class SemgSegScaper(Scaper):
         delattr(self, 'format')
         delattr(self, 'DCASE_format')
         self.label_rate = 10 # this is not set if DCASE_format = False, but it is required for some functions
-        
+
         self.config = kwargs
 
         if kwargs['spatialize_direct_path_time_ms'] is not None:
@@ -138,6 +142,7 @@ class SemgSegScaper(Scaper):
         '''
         Generate a json file, which can be use to reconstruct the same soundscape
         '''
+        self.fg_events = sorted(self.fg_events, key=lambda x: x.event_time)
         data = {'config': self.config}
         data['fg_events'] = [event._asdict() for event in self.fg_events]
         data['bg_events'] = [event._asdict() for event in self.bg_events]
@@ -166,12 +171,12 @@ class SemgSegScaper(Scaper):
         if return_wet is not None: obj.return_wet = return_wet
         if return_ir is not None: obj.return_ir = return_ir
         if return_background is not None: obj.return_background = return_background
-        
+
         sofa_path = os.path.join(obj.rir_dir, obj.room)
         sofa = pysofa.SOFAFile(sofa_path, "r")
         obj.nchans = sofa.getDimensionSize('R')
         sofa.close()
-        
+
         return obj
 
     def get_room_list(self): # return full path
@@ -272,7 +277,7 @@ class SemgSegScaper(Scaper):
             norm_irs = np.transpose(
                 norm_irs, (1, 0, 2)
             )  # (n_irs, n_ch, n_ir_samples) -> (n_ch, n_irs, n_ir_samples)
-            
+
 
             spatial_data = spatialize(
                 x,
@@ -280,7 +285,7 @@ class SemgSegScaper(Scaper):
                 ref_channel=self.config['ref_channel'],
                 direct_path_time_sp=self.spatialize_direct_path_time_sp)
             xS = spatial_data['wet_source']
-            
+
             # standardize the spatialized audio
             event_scale = db2multiplier(self.ref_db + event.snr, xS)
             xS = event_scale * xS
@@ -300,7 +305,7 @@ class SemgSegScaper(Scaper):
                 dry_source = np.zeros(out_audio.shape[0], dtype=out_audio.dtype)
                 dry_source[onsamp : max_length] = spatial_data['dry_source'][: max_length - onsamp]*event_scale # same scale as xS
                 dry_sources.append(dry_source)
-        
+
         return_obj = {
             'mixture': out_audio,
         }
@@ -312,7 +317,7 @@ class SemgSegScaper(Scaper):
         sofafile.close()
 
         return return_obj
-    
+
     def generate(self):
         # initialize output audio array
         out_audio = np.zeros((int(self.duration * self.sr), self.nchans))
@@ -326,7 +331,7 @@ class SemgSegScaper(Scaper):
 
         # output = self.synthesize_events_and_labels(all_irs, all_ir_xyzs, out_audio)
         output = self.synthesize_events_and_labels(out_audio)
-        
+
         output['labels'] = [e.label for e in self.fg_events]
         if self.config['return_background']: output['background'] = background_audio
         output['meta_data'] = self.fg_events
@@ -363,7 +368,7 @@ class SemgSegScaper(Scaper):
                 warnings.warn(f'No valid background files (name starting with "{os.path.splitext(self.room)[0]}") found in "{self.background_dir}", No background added')
                 return
             source_file_ = random.choice(bg_file_list)
-        elif source_file[0] == "choose_wo_room_consistent":
+        elif source_file[0] == "choose_wo_room_consistency":
             # bg_file_list = get_files_list(self.background_dir, split)
             bg_file_list = get_files_list_mod(self.background_dir, split, '.wav', recursive=True)
             if not bg_file_list:
@@ -459,7 +464,7 @@ class SemgSegScaper(Scaper):
         if event_duration_ > self.max_event_dur:
             event_duration_ = self.max_event_dur
 
-        
+
         event_time_ = self.define_event_onset_time(
             event_time,
             event_duration_,
@@ -556,10 +561,10 @@ class SemgSegScaper(Scaper):
                 # ambient = np.tile(ambient, repeats)[:total_samples]
                 repeats = -(-total_samples // ambient.shape[-1])
                 ambient = np.repeat(ambient, repeats, axis=-1)[:, :total_samples]
-            
+
             # ambient = ambient[:, np.newaxis]
             ambient = np.transpose(ambient, (1, 0))
-            
+
             # scale = db2multiplier(self.ref_db + event.snr, np.mean(np.abs(ambient)))
             scale = db2multiplier(self.ref_db + event.snr, ambient) # modified db2multiplier
             out_audio += scale * ambient
