@@ -14,8 +14,8 @@ datamodule:
             num_workers: 6
             persistent_workers: false
             dataset:
-                module: src.datamodules.dataset.s5.dataset_s5_with_interference
-                main: DatasetS5Interference
+                module: src.datamodules.dataset.s5.dataset_s5
+                main: DatasetS5
                 args:
                     config:
                         spatialscaper:
@@ -50,8 +50,8 @@ datamodule:
             num_workers: 6
             persistent_workers: false
             dataset:
-                module: src.datamodules.dataset.s5.dataset_s5_with_interference
-                main: DatasetS5Interference
+                module: src.datamodules.dataset.s5.dataset_s5
+                main: DatasetS5
                 args:
                     config: /home/nguyenbt/data/dcase2025t4/metadata/reverbs_13e_50_5_20_valid_with_interference.txt
                     # ref_channel: 0

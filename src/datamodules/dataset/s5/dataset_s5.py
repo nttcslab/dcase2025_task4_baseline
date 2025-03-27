@@ -11,7 +11,7 @@ import struct
 import librosa
 import random
 
-from src.modules.spatialscaper2.semseg_spatialscaper import SemgSegScaper
+from src.modules.spatialscaper2.semseg_spatialscaper2 import SemgSegScaper2
 from src.utils import LABELS
 
 def collate_fn(list_data_dict):
@@ -75,10 +75,10 @@ class DatasetS5(torch.utils.data.Dataset):
     def get_sound_scape(self, idx):
         if self.from_metadata: # generate sound scape from json config
             metadata_path = os.path.join(self.metadata_dir, self.data[idx]['metadata_path'])
-            ssc = SemgSegScaper.from_metadata(metadata_path)
+            ssc = SemgSegScaper2.from_metadata(metadata_path)
         else: # randomly generate sound scape from param config
             # initialize object
-            ssc = SemgSegScaper(**self.spatialscaper)
+            ssc = SemgSegScaper2(**self.spatialscaper)
 
             # set room
             ssc.set_room(('choose', [])) # random
@@ -96,6 +96,19 @@ class DatasetS5(torch.utils.data.Dataset):
                     split=None,
                 )
             assert self.nevent_range[0] <= len(ssc.fg_events) <=self.nevent_range[1]
+            # import pdb; pdb.set_trace()
+            if 'interference_dir' in self.config['spatialscaper']:
+                ninteferences = random.randint(self.config['ninterference_range'][0], self.config['ninterference_range'][1])
+                for _ in range(ninteferences):
+                    ssc.add_interference(
+                        label=("choose", []),
+                        source_file=("choose", []),
+                        source_time=("choose", []),
+                        event_time=None,
+                        event_position=('choose', []),
+                        snr=("uniform", self.config['inteference_snr_range'][0], self.config['inteference_snr_range'][1]),
+                        split=None,
+                    )
             # add background, make sure it is consistent with room
             if self.spatialscaper['background_dir']: # only add noise if there is background_dir
                 ssc.add_background(source_file = ('choose_wo_room_consistency', []))
@@ -115,15 +128,11 @@ class DatasetS5(torch.utils.data.Dataset):
             even_order = self.data[idx]['ref_event']
             assert set(even_order) == set(output['labels'])
             indices_order = [output['labels'].index(label) for label in even_order]
-            if 'index' in self.data[idx]:
-                soundscape_name = '%04d'%(int(self.data[idx]['index']))
-            else: soundscape_name = '%04d'%(idx)
         else:
             indices_order = list(range(len(output['labels'])))
             if self.shuffle_label:
                 random.shuffle(indices_order)
             even_order = [output['labels'][i] for i in indices_order]
-            soundscape_name = '%04d'%(idx)
 
         label_vector_all = torch.stack([self.get_onehot(label) for label in output['labels']]) # [nevent, nclass]
         label_vector_all = label_vector_all[indices_order, ...] # change order of sound events
@@ -136,7 +145,6 @@ class DatasetS5(torch.utils.data.Dataset):
             'mixture': torch.from_numpy(output['mixture'].transpose()).to(torch.float32), # [nch, wlen]
             'label_vector': label_vector_all, # [nevent, nclass], [nclass], or [nevent x nclass]
             'label': even_order, # list
-            'soundscape_name': soundscape_name, # compatible with evaluation function
         }
 
         if self.return_dry:
