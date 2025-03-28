@@ -278,7 +278,11 @@ class SemgSegScaper2(SemgSegScaper):
                 mono=True,
             )
             x = x[: int(event.event_duration * self.sr)]
-            x = x / np.max(np.abs(x))
+            # x = x / np.max(np.abs(x))
+            if np.max(np.abs(x)) == 0:
+                print(f"Warning: {source_file_full}")
+            else:
+                x = x / np.max(np.abs(x))
             # normalize irs to have unit energy
             norm_irs = IR_normalizer(irs)
 
@@ -343,7 +347,11 @@ class SemgSegScaper2(SemgSegScaper):
                 mono=True,
             )
             x = x[: int(event.event_duration * self.sr)]
-            x = x / np.max(np.abs(x))
+            # x = x / np.max(np.abs(x))
+            if np.max(np.abs(x)) == 0:
+                print(f"Warning: {source_file_full}")
+            else:
+                x = x / np.max(np.abs(x))
             # normalize irs to have unit energy
             norm_irs = IR_normalizer(irs)
 
