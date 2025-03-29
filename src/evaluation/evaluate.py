@@ -56,12 +56,10 @@ class Evaluator:
 
     def write_audio(self, batch_est_labels, batch_est_waveforms, batch_soundscape_names):
         for labels, waveforms, soundscape_name in zip(batch_est_labels, batch_est_waveforms, batch_soundscape_names):
-                output_folder = os.path.join(self.outputdir, soundscape_name)
-                os.makedirs(output_folder, exist_ok=True)
-                for label, waveform in zip(labels, waveforms):
-                    if label != 'silence':
-                        wavpath = os.path.join(output_folder, label + '.wav')
-                        sf.write(wavpath, waveform.numpy(), self.sr)
+            for label, waveform in zip(labels, waveforms):
+                if label != 'silence':
+                    wavpath = os.path.join(self.outputdir, soundscape_name + '_' + label + '.wav')
+                    sf.write(wavpath, waveform.numpy(), self.sr)
 
     def predict(self, mixture, labels=None):
         mixture = mixture.to('cuda')
@@ -89,6 +87,7 @@ class Evaluator:
                 batch_est_waveforms, batch_est_labels = self.predict(batch['mixture'])
 
             if self.generate_waveform:
+                os.makedirs(self.outputdir, exist_ok=True)
                 self.write_audio(batch_est_labels, batch_est_waveforms, batch['soundscape_name'])
 
             batch_mixture = batch['mixture'][:, 0, :] # [bs, wlen]
@@ -126,4 +125,4 @@ if __name__ == '__main__':
     print('START')
     main(args)
 
-# python -m src.evaluation.evaluate -c src/evaluation/eval_configs/valid_m2d_resunetk_eval.yaml --generate_waveform
+# python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.yaml --generate_waveform

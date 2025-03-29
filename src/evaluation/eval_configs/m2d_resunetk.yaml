@@ -2,10 +2,10 @@ dataset:
     module: "src.datamodules.dataset.s5.dataset_s5_waveform"
     main: "DatasetS5Waveform"
     args:
-        soundscape_dir: 'data/dev/test1/soundscape'
-        oracle_target_dir: 'data/dev/test1/oracle_target'
-        estimate_target_dir: 'data/dev/test1/generated' # if generate_waveform: estimated waveform will be generated to this dir
-                                                        # if use_generated_waveform: estimated waveform will be loaded from this dir
+        soundscape_dir: 'data/dev_set/test/soundscape'
+        oracle_target_dir: 'data/dev_set/test/oracle_target'
+        estimate_target_dir: 'data/dev_set/test/estimate' # --generate_waveform: estimated waveforms will be written to this dir
+                                                          # --use_generated_waveform: estimated waveform will be loaded from this dir, ignore the model
         n_sources: 3
         label_set: "dcase2025t4"
         label_vector_mode: "concat"
@@ -15,8 +15,8 @@ model:
     main: "S5"
     args:
         label_set: "dcase2025t4"
-        tagger_ckpt: 'ckpt/dcase25int/label/m2dat_head/epoch=105.ckpt'
-        separator_ckpt: 'ckpt/dcase25int/separation/resunetk/epoch=39.ckpt'
+        tagger_ckpt: 'ckpt/m2dat.ckpt'
+        separator_ckpt: 'ckpt/resunetk.ckpt'
 
         tagger_config:
             module: "src.models.m2dat.m2dat"

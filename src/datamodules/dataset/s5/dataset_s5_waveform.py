@@ -45,6 +45,11 @@ class DatasetS5Waveform(torch.utils.data.Dataset):
         self.label_set = label_set
         self.label_vector_mode = label_vector_mode
 
+        self.labels = LABELS[self.label_set]
+        self.onehots = torch.eye(len(self.labels), requires_grad=False).to(torch.float32)
+        self.label_onehots = {label: self.onehots[idx] for idx, label in enumerate(self.labels)}
+        self.label_onehots['silence'] = torch.zeros(self.onehots.size(1), requires_grad=False,  dtype=torch.float32)
+
         self.data = [{'soundscape': f[:-4],
                       'mixture_path': os.path.join(self.soundscape_dir, f)
                       } for f in os.listdir(self.soundscape_dir) if f.endswith(".wav")]
@@ -56,24 +61,20 @@ class DatasetS5Waveform(torch.utils.data.Dataset):
         if self.estimate_target_dir is not None:
             self._get_data(self.data, 'est', self.estimate_target_dir)
 
-        self.labels = LABELS[self.label_set]
-        self.onehots = torch.eye(len(self.labels), requires_grad=False).to(torch.float32)
-        self.label_onehots = {label: self.onehots[idx] for idx, label in enumerate(self.labels)}
-        self.label_onehots['silence'] = torch.zeros(self.onehots.size(1), requires_grad=False,  dtype=torch.float32)
-
         self.collate_fn = collate_fn
 
     def _get_data(self, data, est_ref, source_dir):
-        for d in self.data:
-            source_folder = os.path.join(source_dir, d['soundscape'])
-            assert os.path.isdir(source_folder), f'there was {d["mixture_path"]} but no {source_folder}'
-            d[est_ref + '_label'] = [f[:-4]
-                                for f in os.listdir(source_folder) if f.endswith(".wav")]
-            d[est_ref + '_source_paths'] = [os.path.join(source_folder, f)
-                                for f in os.listdir(source_folder) if f.endswith(".wav")]
-            if not d[est_ref + '_label']:
-                warnings.warn(f'no estimated sources in {source_folder}')
-
+        if not os.path.exists(source_dir):
+            raise FileNotFoundError(f"Source directory '{source_dir}' does not exist.")
+        all_wav = [f for f in os.listdir(source_dir) if f.endswith(".wav")]
+        for d in data:
+            sources = [w for w in all_wav if w.startswith(d['soundscape'])]
+            d[est_ref + '_label'] = [s[len(d['soundscape']) + 1 : -4] for s in sources]
+            d[est_ref + '_source_paths'] = [os.path.join(source_dir, s) for s in sources]
+            
+            if not sources: warnings.warn(f'No estimate for {d["mixture_path"]}')
+            for lb, fname in zip(d[est_ref + '_label'], sources):
+                assert lb in self.labels, f'"{fname}" is not a valid filename of the estimates for {d["soundscape"]}'
 
     def get_onehot(self, label):
         return self.label_onehots[label]
