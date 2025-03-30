@@ -68,7 +68,7 @@ class DatasetS5Waveform(torch.utils.data.Dataset):
             raise FileNotFoundError(f"Source directory '{source_dir}' does not exist.")
         all_wav = [f for f in os.listdir(source_dir) if f.endswith(".wav")]
         for d in data:
-            sources = [w for w in all_wav if w.startswith(d['soundscape'])]
+            sources = [w for w in all_wav if w.startswith(d['soundscape']) and w.endswith('.wav')]
             d[est_ref + '_label'] = [s[len(d['soundscape']) + 1 : -4] for s in sources]
             d[est_ref + '_source_paths'] = [os.path.join(source_dir, s) for s in sources]
             
