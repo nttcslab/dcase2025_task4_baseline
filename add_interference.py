@@ -152,7 +152,7 @@ if __name__ == '__main__':
                  selected_classes=selected_classes,
                  output_dir= os.path.join(args.output_dir, 'valid'),
                  config=config)
-# python interference_sources_prepare.py -i 'data/BinauralCuratedDataset/bg_scaper_fmt' -o 'data/BinauralCuratedDataset/bg_scaper_fmt_dcase25t4' -a 0.02 -s 32000
+# python interference_sources_prepare.py -i 'data/BinauralCuratedDataset/bg_scaper_fmt' -o 'data/interference'
 
 
 
