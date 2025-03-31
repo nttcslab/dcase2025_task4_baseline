@@ -19,9 +19,10 @@ datamodule:
                 args:
                     config:
                         spatialscaper:
-                            foreground_dir: "/home/nguyenbt/data/dcase2025t4/DCASE2025Task4SoundEvent32k_min002/train"
-                            background_dir: "/home/nguyenbt/data/foa_meir/Noise2_32k/test_reverb-c"
-                            rir_dir: "/home/nguyenbt/data/foa_meir/IRrecordingsSofa_32k/test_reverb-c"
+                            foreground_dir: "data/dev_set/sound_event/train"
+                            background_dir: "data/dev_set/noise/train"
+                            rir_dir: "data/dev_set/room_ir/train"
+                            interference_dir: "data/dev_set/interference/train"
                             duration: 10.0
                             sr: 32000
                             max_event_overlap: 3
@@ -34,9 +35,10 @@ datamodule:
                             spatialize_direct_path_time_ms: null
                         snr_range: [5, 20]
                         nevent_range: [1, 3]
+                        inteference_snr_range: [0, 15]
+                        ninterference_range: [1, 2]
                         dataset_length: 100000
                         shuffle_label: false
-                    # ref_channel: 0
                     n_sources: 3
                     label_set: dcase2025t4
                     return_dry: false
@@ -50,8 +52,7 @@ datamodule:
                 module: src.datamodules.dataset.s5.dataset_s5
                 main: DatasetS5
                 args:
-                    config: /home/nguyenbt/data/dcase2025t4/metadata/reverbs_13e_50_5_20_valid.txt
-                    # ref_channel: 0
+                    config: 'data/dev_set/metadata/valid.json'
                     n_sources: 3
                     label_set: dcase2025t4
                     return_dry: false
