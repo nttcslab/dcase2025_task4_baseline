@@ -37,7 +37,7 @@ datamodule:
                         nevent_range: [1, 3]
                         inteference_snr_range: [0, 15]
                         ninterference_range: [1, 2]
-                        dataset_length: 100000
+                        dataset_length: 600
                         shuffle_label: false
                     n_sources: 3
                     label_set: dcase2025t4

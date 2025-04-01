@@ -44,11 +44,8 @@ ln -s $PATH_TO_DATA/DCASE2025Task4Dataset data
 ```
 Add data from other dataset
 ```
-# Download Semantic Hearing data
-wget UPDATING
-unzip UPDATING
+# Download Semantic Hearing's data
 # Download EARS
-UPDATING
 
 # ADD data
 cd dcase2025_task4_baseline
