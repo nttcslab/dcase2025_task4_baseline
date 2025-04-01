@@ -49,15 +49,15 @@ UPDATING
 
 # Create a symlink to source directory
 cd dcase2025_task4_baseline
-ln -s $PATH_TO_DATA/DCASE2025Task4Dataset data
+ln -s /path/to/DCASE2025Task4Dataset data
 ```
 Add data from other datasets
 ```
-# Download Semantic Hearing's data
+# Download Semantic Hearing's dataset
 # https://github.com/vb000/SemanticHearing
 wget -P data https://semantichearing.cs.washington.edu/BinauralCuratedDataset.tar
 
-# Download EARS using bash
+# Download EARS dataset using bash
 # https://github.com/facebookresearch/ears_dataset
 mkdir EARS
 cd EARS
@@ -79,31 +79,33 @@ python verify.py --source_dir .
 ```
 
 # Training
+### Separation model
 ```
-# Train separation model
 python -m src.train -c config/separation/resunetk.yaml -w workspace/separation
 python -m src.train -c config/separation/resunet.yaml -w workspace/separation
-
-# Fine-tune label prediction model
+```
+### Audio tagging model
+```
+# Train only the head
 python -m src.train -c config/label/m2dat_head.yaml -w workspace/label
 
-# continue fine-tune the last blocks of the backbone, replace the BEST_EPOCH_NUMBER
+# Continue fine-tuning the last blocks of the M2D backbone, replace the BEST_EPOCH_NUMBER with the appropriate epoch number
 python -m src.train -c config/label/m2dat_head_blks.yaml -w workspace/label -r workspace/label/m2dat_head/checkpoints/epoch=BEST_EPOCH_NUMBER.ckpt
 ```
 
-# Evaluating baseline checkpoint
+# Evaluating baseline checkpoints
 ```
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.yaml
-'''
+"""
 CA-SDRi: 11.088
 Label prediction accuracy: 59.80
-'''
+"""
 
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunet.yaml
-'''
+"""
 CA-SDRi: 11.032
 Label prediction accuracy: 59.80
-'''
+"""
 
 # Evaluate and generate estimated waveforms
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.yaml --generate_waveform
