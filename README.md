@@ -35,8 +35,7 @@ wget -P ckpt UPDATING/resunetk.ckpt
 DCASE2025Task4Dataset
 ```
 # Download
-wget UPDATING
-unzip UPDATING
+UPDATING
 
 # Create a symlink to source directory
 cd dcase2025_task4_baseline
@@ -66,8 +65,8 @@ python -m src.train -c config/separation/resunet.yaml -w workspace/separation
 # Fine-tune label prediction model
 python -m src.train -c config/label/m2dat_head.yaml -w workspace/label
 
-# continue fine-tune the last two blocks of the backbone, replace the BEST_EPOCH_NUMBER
-python -m src.train -c config/label/m2dat_head_2blks.yaml -w workspace/label -r workspace/label/m2dat_head/checkpoints/epoch=BEST_EPOCH_NUMBER.ckpt
+# continue fine-tune the last blocks of the backbone, replace the BEST_EPOCH_NUMBER
+python -m src.train -c config/label/m2dat_head_blks.yaml -w workspace/label -r workspace/label/m2dat_head/checkpoints/epoch=BEST_EPOCH_NUMBER.ckpt
 ```
 
 # Evaluating baseline checkpoint

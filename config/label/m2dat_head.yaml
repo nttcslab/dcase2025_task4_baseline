@@ -10,7 +10,7 @@ datamodule:
     main: DataModule
     args:
         train_dataloader:
-            batch_size: 128
+            batch_size: 32
             num_workers: 6
             persistent_workers: false
             dataset:
@@ -45,7 +45,7 @@ datamodule:
                     label_vector_mode: multihot
                     checking: false
         val_dataloader:
-            batch_size: 128
+            batch_size: 32
             num_workers: 6
             persistent_workers: false
             dataset:
@@ -117,7 +117,7 @@ train:
             precision: 32-true
             logger: null
             fast_dev_run: False
-            max_epochs: 300
+            max_epochs: -1
             log_every_n_steps: 100
             use_distributed_sampler: True
             sync_batchnorm: True
