@@ -5,13 +5,13 @@ This is a baseline implementation for the [DCASE2025 Challenge Task 4: Spatial S
 [DCASE2025 Challenge](https://dcase.community/challenge2025/index) provides an overview of the challenge tasks.
 
 
-# Related repositories
+# Related Repositories
 Part of `src/models/resunet` originates from  https://github.com/bytedance/uss/tree/master/uss/models \
 Part of `src/models/m2dat` originates from  https://github.com/nttcslab/m2d \
 Part of `src/modules/spatialscaper2` originates from  https://github.com/iranroman/SpatialScaper 
 
 
-# Environment and data setting
+# Data and Environment Configuration
 ### Environment
 ```
 git clone https://github.com/nttcslab/dcase2025_task4_baseline.git
@@ -79,12 +79,12 @@ python verify.py --source_dir .
 ```
 
 # Training
-### Separation model
+### Separation Models
 ```
 python -m src.train -c config/separation/resunetk.yaml -w workspace/separation
 python -m src.train -c config/separation/resunet.yaml -w workspace/separation
 ```
-### Audio tagging model
+### Audio Tagging Models
 ```
 # Train only the head
 python -m src.train -c config/label/m2dat_head.yaml -w workspace/label
@@ -93,7 +93,7 @@ python -m src.train -c config/label/m2dat_head.yaml -w workspace/label
 python -m src.train -c config/label/m2dat_head_blks.yaml -w workspace/label -r workspace/label/m2dat_head/checkpoints/epoch=BEST_EPOCH_NUMBER.ckpt
 ```
 
-# Evaluating baseline checkpoints
+# Evaluating Baseline Checkpoints
 ```
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.yaml
 """
