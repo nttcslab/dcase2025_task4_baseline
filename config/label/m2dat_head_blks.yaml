@@ -10,7 +10,7 @@ datamodule:
     main: DataModule
     args:
         train_dataloader:
-            batch_size: 8
+            batch_size: 16
             num_workers: 6
             persistent_workers: false
             dataset:
@@ -45,7 +45,7 @@ datamodule:
                     label_vector_mode: multihot
                     checking: false
         val_dataloader:
-            batch_size: 8
+            batch_size: 16
             num_workers: 6
             persistent_workers: false
             dataset:
@@ -67,7 +67,7 @@ lightning_module:
             main: M2dAt
             args:
                 weight_file: ckpt/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth
-                finetuning_layers: 1_blocks # may change
+                finetuning_layers: 2_blocks # may change
                 num_classes: 18
                 ref_channel: 0
         loss:
@@ -117,7 +117,7 @@ train:
             precision: 32-true
             logger: null
             fast_dev_run: False
-            max_epochs: 300
+            max_epochs: -1
             log_every_n_steps: 100
             use_distributed_sampler: True
             sync_batchnorm: True
