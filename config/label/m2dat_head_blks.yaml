@@ -104,7 +104,7 @@ train:
             module: lightning.pytorch.callbacks
             main: TQDMProgressBar
             args:
-                refresh_rate: 60
+                refresh_rate: 1
                 process_position: 0
     trainer:
         module: lightning.pytorch

@@ -31,7 +31,7 @@ class DatasetS5Waveform(torch.utils.data.Dataset):
                  oracle_target_dir=None,
                  estimate_target_dir=None,
                  n_sources=3,
-                 label_set='dcase2025', # 'eusipco25' key of LABELS in utils
+                 label_set='dcase2025t4', # key of LABELS in utils
                  label_vector_mode='concat', # multihot, concat, stack
                  sr=32000,
 

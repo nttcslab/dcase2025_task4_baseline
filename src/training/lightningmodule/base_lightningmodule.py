@@ -16,20 +16,7 @@ class BaseLightningModule(pl.LightningModule, PyTorchModelHubMixin):
         is_validation=False,
         metric:Dict=None,
     ):
-        """
-        Module for training the label queried audio separation
-        All the dict input are configs for initializing the modules
-        This is an abstract class
-        training_step_processing and validation_step_processing must be implemeted in the subclass
-        
-        Args:
-            model (dict)
-            loss (dict)
-            optimizer (dict)
-            lr_scheduler (dict, optional)
-            is_validation (dict, optional)
-            metric (dict, optional): if not provided, only calculate loss on for validation
-        """
+
         super().__init__()
         self.model_config = model
         self.model = initialize_config(self.model_config)
@@ -69,20 +56,7 @@ class BaseLightningModule(pl.LightningModule, PyTorchModelHubMixin):
 
     def training_step_processing(self, batch_data_dict, batch_idx):
         raise NotImplementedError
-        """
-        process batch_data_dict and return loss
 
-        Args:
-            batch_data_dict (dict)
-            batch_idx
-        Returns:
-            batchsize (int)
-            loss_dict (dict)
-                {
-                    "loss": loss_val # must have, for back probagation
-                    "other_loss_or_metric_name": val, # for logging
-                }
-        """
         batchsize = batch_data_dict['mixture'].shape[0]
 
         input_dict = {
@@ -96,14 +70,6 @@ class BaseLightningModule(pl.LightningModule, PyTorchModelHubMixin):
         return batchsize, loss_dict
 
     def training_step(self, batch_data_dict, batch_idx):
-        """
-        Args:
-            batch_data_dict: a mini batch from dataloader
-            batch_idx: int
-
-        Returns:
-            loss: float, loss function of this mini-batch
-        """
         self.set_train_mode()
 
         batchsize, loss_dict = self.training_step_processing(batch_data_dict, batch_idx)
@@ -123,20 +89,6 @@ class BaseLightningModule(pl.LightningModule, PyTorchModelHubMixin):
 
     def validation_step_processing(self, batch_data_dict, batch_idx):
         raise NotImplementedError
-        """
-        process batch_data_dict and return loss and metrics
-        one of loss_or_metric_name in loss_dict can be selected for ModelCheckpoint(monitor)
-
-        Args:
-            batch_data_dict (dict)
-            batch_idx
-        Returns:
-            batchsize (int)
-            loss_dict (dict)
-                {
-                    "loss_or_metric_name": val # for logging, 'loss' is not required
-                }
-        """
         batchsize = batch_data_dict['mixture'].shape[0]
 
         input_dict = {
@@ -156,14 +108,6 @@ class BaseLightningModule(pl.LightningModule, PyTorchModelHubMixin):
         return batchsize, loss_dict
 
     def _validation_step(self, batch_data_dict, batch_idx):
-        """
-        Args:
-            batch_data_dict: a mini batch from dataloader
-            batch_idx: int
-
-        Returns:
-            None
-        """
         self.model.eval()
 
         batchsize, loss_dict = self.validation_step_processing(batch_data_dict, batch_idx)
@@ -189,57 +133,3 @@ class BaseLightningModule(pl.LightningModule, PyTorchModelHubMixin):
             }
         else:
             return self.optimizer
-    
-if __name__ == '__main__':
-    # cd ../..
-
-    import os, sys; os.chdir('../..'); sys.path.append(os.getcwd())
-    import importlib
-    def initialize_config(module_cfg):
-        module = importlib.import_module(module_cfg["module"])
-        if 'args' in module_cfg.keys(): return getattr(module, module_cfg["main"])(**module_cfg["args"])
-        return getattr(module, module_cfg["main"])()
-
-    config = {
-        'module': 'src.training.label_query_separation',
-        'main': 'LabelQuerySeparationLightning',
-        'args': {
-            'model': {
-                "module": "src.models.resunet.resunet_mono_out",
-                "main": "ResUNet30",
-                "args":{
-                    "input_channels": 2,
-                    "ref_channel": 1,
-                    "label_len": 20,
-                }
-            },
-            'loss': {
-                "module": 'src.training.loss.snr_sisnr',
-                'main': 'get_loss_func',
-                'args': {
-                    'snr_weight': 0.9,
-                    'sisnr_weight': 0.1
-                }
-            },
-            'metric': {
-                "module": 'src.training.metrics.metrics',
-                'main': 'get_metric_func'
-            },
-            'optimizer': {
-                'module': 'torch.optim',
-                'main': 'AdamW',
-                'args': {
-                    'params': 'assigned in src.training.label_query_separation',
-                    'lr': 0.00001,
-                    'betas': (0.9, 0.999),
-                    'eps': 1e-08,
-                    'weight_decay': 0.0,
-                    'amsgrad': True
-                }
-            },
-            'is_validation': True
-        }
-    }
-
-    module = initialize_config(config)
-    

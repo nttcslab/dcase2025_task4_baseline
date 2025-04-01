@@ -17,14 +17,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 def train(args) -> NoReturn:
-    r"""Train, evaluate, and save checkpoints.
-
-    Args:
-        workspace: str, directory of workspace
-        gpus: int, number of GPUs to train
-        config_yaml: str
-    """
-
     # arguments & parameters
     workspace = args.workspace
     config_yaml = args.config_yaml

@@ -4,7 +4,7 @@ dataset:
     args:
         soundscape_dir: 'data/dev_set/test/soundscape'
         oracle_target_dir: 'data/dev_set/test/oracle_target'
-        estimate_target_dir: 'data/dev_set/test/estimate_target' # --generate_waveform: estimated waveforms will be written to this dir
+        estimate_target_dir: 'data/dev_set/test/estimate_target_resunetk' # --generate_waveform: estimated waveforms will be written to this dir
                                                           # --use_generated_waveform: estimated waveform will be loaded from this dir, ignore the model
         n_sources: 3
         label_set: "dcase2025t4"

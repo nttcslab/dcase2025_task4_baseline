@@ -103,8 +103,8 @@ class Evaluator:
                 label_check = (set(est_lb)- {'silence'}) == (set(ref_lb)- {'silence'})
                 metrics.append(metric)
                 label_checks.append(label_check)
-        print('CA-SDRi:', np.mean(metrics))
-        print('label accuracy %.4f'%(np.sum(label_checks)/len(label_checks)))
+        print('CA-SDRi: %.3f'%(np.mean(metrics)))
+        print('Label prediction accuracy: %.2f'%(np.sum(label_checks)*100/len(label_checks)))
 
 def main(args):
     evalobj = Evaluator(

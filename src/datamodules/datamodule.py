@@ -16,22 +16,6 @@ class DataModule(pl.LightningDataModule):
         train_dataloader: dict,
         val_dataloader: dict = None,
     ):
-        """Datamodule
-    
-        Args:
-            train_dataloader (dict): {
-                batch_size: int,
-                num_workers: int,
-                persistent_workers: bool
-                dataset (dict): { # config for initialize dataset
-                    module: path.to.module
-                    main: MainFunction
-                    args: {**kwargs}
-                }
-            }
-            val_dataloader (dict, optional): similar to train
-            }
-        """
         super().__init__()
         self.train_config = train_dataloader
         self.val_config = val_dataloader
@@ -82,65 +66,3 @@ class DataModule(pl.LightningDataModule):
 
     def teardown(self, stage=None):
         pass
-
-
-if __name__ == '__main__':
-    # cd ../..
-
-    import os, sys; os.chdir('../..'); sys.path.append(os.getcwd())
-    import yaml
-    import importlib
-    def initialize_config(module_cfg):
-        module = importlib.import_module(module_cfg["module"])
-        if 'args' in module_cfg.keys(): return getattr(module, module_cfg["main"])(**module_cfg["args"])
-        return getattr(module, module_cfg["main"])()
-
-    config = {
-        'module': 'src.datamodules.datamodule',
-        'main': 'DataModule',
-        'args': {
-            'train_dataloader': {
-                'batch_size': 4,
-                'num_workers': 1,
-                'persistent_workers': False,
-                'dataset': {
-                    "module": 'src.datamodules.dataset.semantic_hearing.curated_binaural_augrir_mono_wet',
-                    'main': 'CuratedBinauralAugRIRDataset',
-                    'args': {
-                        "ref_channel": 0,
-                        'fg_dir': '/home/nguyenbt/data/BinauralCuratedDataset/scaper_fmt/train',
-                        'bg_dir': '/home/nguyenbt/data/BinauralCuratedDataset/TAU-acoustic-sounds/TAU-urban-acoustic-scenes-2019-development',
-                        'bg_scaper_dir': '/home/nguyenbt/data/BinauralCuratedDataset/bg_scaper_fmt/train',
-                        'jams_dir': '/home/nguyenbt/data/BinauralCuratedDataset/jams_hard/train',
-                        'hrtf_dir': '/home/nguyenbt/data/BinauralCuratedDataset/hrtf',
-                        'dset': 'train',
-                        'sr': 44100,
-                        'resample_rate': None,
-                        'reverb': True
-                    }
-                }
-            },
-            'val_dataloader': {
-                'batch_size': 4,
-                'num_workers': 1,
-                'persistent_workers': False,
-                'dataset': {
-                    "module": 'src.datamodules.dataset.semantic_hearing.curated_binaural_augrir_mono_wet',
-                    'main': 'CuratedBinauralAugRIRDataset',
-                    'args': {
-                        "ref_channel": 0,
-                        'fg_dir': '/home/nguyenbt/data/BinauralCuratedDataset/scaper_fmt/val',
-                        'bg_dir': '/home/nguyenbt/data/BinauralCuratedDataset/TAU-acoustic-sounds/TAU-urban-acoustic-scenes-2019-development',
-                        'bg_scaper_dir': '/home/nguyenbt/data/BinauralCuratedDataset/bg_scaper_fmt/val',
-                        'jams_dir': '/home/nguyenbt/data/BinauralCuratedDataset/jams_hard/val',
-                        'hrtf_dir': '/home/nguyenbt/data/BinauralCuratedDataset/hrtf',
-                        'dset': 'val',
-                        'sr': 44100,
-                        'resample_rate': None,
-                        'reverb': True
-                    }
-                }
-            }
-        }
-    }
-    datamodule = initialize_config(config)

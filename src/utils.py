@@ -9,12 +9,6 @@ import pytz
 import torch
 
 LABELS = {
-    'eusipco25': [ # fixed order for multi-hot vector
-            "alarm_clock", "baby_cry", "birds_chirping", "cat", "car_horn",
-            "cock_a_doodle_doo", "cricket", "computer_typing",
-            "dog", "glass_breaking", "gunshot", "hammer",
-            "ocean", "door_knock", "siren", "speech",
-            "thunderstorm", "toilet_flush"],
     'dcase2025t4': ["AlarmClock", "BicycleBell", "Blender", "Buzzer",
                     "Clapping", "Cough", "CupboardOpenClose", "Dishes",
                     "Doorbell", "FootSteps", "HairDryer", "MechanicalFans",

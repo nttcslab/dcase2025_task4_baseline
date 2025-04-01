@@ -22,6 +22,9 @@ conda activate dcase2025t4
 git clone https://github.com/iranroman/SpatialScaper.git
 cd SpatialScaper
 pip install -e .
+
+# sox may be required for the above environment installation
+sudo apt-get update && sudo apt-get install -y gcc g++ sox libsox-dev
 ```
 
 ### Checkpoints
@@ -48,15 +51,27 @@ UPDATING
 cd dcase2025_task4_baseline
 ln -s $PATH_TO_DATA/DCASE2025Task4Dataset data
 ```
-Add data from other dataset
+Add data from other datasets
 ```
 # Download Semantic Hearing's data
-# Download EARS
+https://github.com/vb000/SemanticHearing
+wget -P data https://semantichearing.cs.washington.edu/BinauralCuratedDataset.tar
 
-# ADD data
+# Download EARS using bash
+# https://github.com/facebookresearch/ears_dataset
+mkdir EARS
+cd EARS
+for X in $(seq -w 001 107); do
+  curl -L https://github.com/facebookresearch/ears_dataset/releases/download/dataset/p${X}.zip -o p${X}.zip
+  unzip p${X}.zip
+  rm p${X}.zip
+done
+
+# Add data
 cd dcase2025_task4_baseline
 bash add_data.sh --semhear_path /path/to/BinauralCuratedDataset --ears_path /path/to/EARS
 ```
+
 ### Verifying
 ```
 cd dcase2025_task4_baseline
@@ -79,7 +94,16 @@ python -m src.train -c config/label/m2dat_head_blks.yaml -w workspace/label -r w
 # Evaluating baseline checkpoint
 ```
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.yaml
+'''
+CA-SDRi: 11.088
+Label prediction accuracy: 59.80
+'''
+
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunet.yaml
+'''
+CA-SDRi: 11.032
+Label prediction accuracy: 59.80
+'''
 
 # Evaluate and generate estimated waveforms
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.yaml --generate_waveform

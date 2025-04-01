@@ -28,7 +28,7 @@ class DatasetS5(torch.utils.data.Dataset):
     def __init__(self,
                  config, # dict or string
                  n_sources,
-                 label_set, # 'eusipco25' key of LABELS in utils
+                 label_set, # 'dcase2025t4' key of LABELS in utils
                  return_dry=False, # for source separation
                  label_vector_mode='multihot', # multihot, concat, stack
                  checking=None, # return all the wet source, dry source, ir from spatial scaper
