@@ -1,3 +1,8 @@
+# Spatial Semantic Segmentation of Sound Scenes
+
+This is a baseline inplementation for the DCASE2025 Challenge Task 4: Spatical Semantic Segmentation of Sound Scenes.  
+
+
 # Related repositories
 Part of `src/models/resunet` originates from  https://github.com/bytedance/uss/tree/master/uss/models \
 Part of `src/models/m2dat` originates from  https://github.com/nttcslab/m2d \
@@ -79,6 +84,13 @@ python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.ya
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunet.yaml --generate_waveform
 ```
 
+# Citation
+
+If you use this system, please cite the following papers:
+
++ Binh Thien Nguyen, Masahiro Yasuda, Daiki Takeuchi, Daisuke Niizumi, Yasunori Ohishi, Noboru Harada, ”Baseline Systems and Evaluation Metrics for Spatial Semantic Segmentation of Sound Scenes,” in arXiv preprint arXiv 2503.22088, 2025, available at [URL](https://arxiv.org/abs/2503.22088).
+
++ Masahiro Yasuda, Binh Thien Nguyen, Noboru Harada, Romain Serizel, Mayank Mishra, Marc Delcroix, Shoko Araki, Daiki Takeuchi, Daisuke Niizumi, Yasunori Ohishi, Tomohiro Nakatani, Takao Kawamura, Nobutaka Ono, ”Description and discussion on DCASE 2025 challenge task 4: Spatial Semantic Segmentation of Sound Scenes,” in arXiv preprint arXiv:xxxx.xxxx, 2025, available at [URL]().
 
 # References
 UPDATING
