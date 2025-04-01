@@ -54,7 +54,7 @@ ln -s $PATH_TO_DATA/DCASE2025Task4Dataset data
 Add data from other datasets
 ```
 # Download Semantic Hearing's data
-https://github.com/vb000/SemanticHearing
+# https://github.com/vb000/SemanticHearing
 wget -P data https://semantichearing.cs.washington.edu/BinauralCuratedDataset.tar
 
 # Download EARS using bash
