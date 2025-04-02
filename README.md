@@ -12,8 +12,9 @@ For SS, we provide two variants: ResUNet and ResUNetK.
 
 ### Data folder structure
 The data consists of two parts: the Development dataset and the Evaluation dataset.
+The Development dataset consists of newly recorded sound events and room impulse responses for DCASE2025 Challenge Task 4, along with sound events, noise, and room impulse responses from other available datasets.
 The Evaluation dataset will be released at a later stage.
-The structure of the Development dataset is as follows:
+The structure of the data folder that contains the Develompent dataset is follows:
 ```
 data
 `-- dev_set
