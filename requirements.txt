@@ -1,0 +1,34 @@
+### Requirements
+-f https://download.pytorch.org/whl/cu121
+torch
+torchvision
+torchaudio
+lightning
+librosa
+soundfile
+scipy
+matplotlib
+tqdm
+numpy
+pandas
+tensorflow
+tensorflow-probability
+torchmetrics
+seaborn
+ipykernel
+thop
+openl3
+transformers
+bs4
+python-sofa
+onnx
+onnxruntime
+torch_tb_profiler
+ffmpegio
+noisereduce
+jupyterlab
+tensorboard
+torchlibrosa
+timm
+einops
+nnAudio
