@@ -46,7 +46,7 @@ Part of `src/models/m2dat` originates from  https://github.com/nttcslab/m2d \
 Part of `src/modules/spatialscaper2` originates from  https://github.com/iranroman/SpatialScaper 
 
 
-## Data and Environment Configuration
+## Data Preparation and Environment Configuration
 ### Setting
 Clone repository
 ```
@@ -76,7 +76,7 @@ SoX may be required for the above environment installation
 sudo apt-get update && sudo apt-get install -y gcc g++ sox libsox-dev
 ```
 
-### Data
+### Data Preparation
 The Development dataset can be donwloaded and placed into `data` folder as
 ```
 # Download and unzip all files from https://zenodo.org/10.5281/zenodo.15117227
