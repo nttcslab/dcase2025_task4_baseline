@@ -10,7 +10,7 @@ The system consists of two models, audio tagging (AT) and source separation (SS)
 The AT model consists of a pre-trained feature extractor backbone (M2D) and a head layer.
 For SS, we provide two variants: ResUNet and ResUNetK.
 
-### Data
+### Data folder structure
 The data consists of two parts: the Development dataset and the Evaluation dataset.
 The Evaluation dataset will be released at a later stage.
 The structure of the Development dataset is as follows:
