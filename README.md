@@ -93,6 +93,7 @@ python verify.py --source_dir .
 python -m src.train -c config/separation/resunetk.yaml -w workspace/separation
 python -m src.train -c config/separation/resunet.yaml -w workspace/separation
 ```
+The TensorBoard log and model checkpoint will be saved to `workspace/separation/resunetk` and `workspace/separation/resunet`, respectively.
 ### Audio Tagging Models
 ```
 # Train only the head
