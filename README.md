@@ -1,6 +1,6 @@
 # Spatial Semantic Segmentation of Sound Scenes
 
-This is a baseline implementation for the [DCASE2025 Challenge Task 4: Spatial Semantic Segmentation of Sound Scenes]().
+This is a baseline implementation for the [DCASE2025 Challenge Task 4: Spatial Semantic Segmentation of Sound Scenes](https://dcase.community/challenge2025/task-spatial-semantic-segmentation-of-sound-scenes).
 
 [DCASE2025 Challenge](https://dcase.community/challenge2025/index) provides an overview of the challenge tasks.
 
@@ -51,6 +51,7 @@ unzip checkpoint/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly.zip -d c
 DCASE2025Task4Dataset
 ```
 # Download
+# https://zenodo.org/10.5281/zenodo.15117227
 UPDATING
 
 cd dcase2025_task4_baseline
