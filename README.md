@@ -82,7 +82,8 @@ sudo apt-get update && sudo apt-get install -y gcc g++ sox libsox-dev
 ### Data Preparation
 The Development dataset can be donwloaded and placed into `data` folder as
 ```
-# Download and unzip all files from https://zenodo.org/10.5281/zenodo.15117227
+# Download all files from https://zenodo.org/records/15117227 and unzip
+wget -i dev_set_zenodo.txt
 zip -s 0 DCASE2025Task4Dataset.zip --out unsplit.zip
 unzip unsplit.zip
 
