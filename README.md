@@ -13,17 +13,26 @@ Part of `src/modules/spatialscaper2` originates from  https://github.com/iranrom
 
 # Data and Environment Configuration
 ### Environment
+Environment
 ```
+# Using conda
 git clone https://github.com/nttcslab/dcase2025_task4_baseline.git
 cd dcase2025_task4_baseline
 conda env create -f environment.yml
 conda activate dcase2025t4
 
+# Or using pip (python=3.11)
+pip install -r requirements.txt
+```
+Install SpatialScaper
+```
 git clone https://github.com/iranroman/SpatialScaper.git
 cd SpatialScaper
 pip install -e .
+```
 
-# sox may be required for the above environment installation
+SoX may be required for the above environment installation
+```
 sudo apt-get update && sudo apt-get install -y gcc g++ sox libsox-dev
 ```
 
