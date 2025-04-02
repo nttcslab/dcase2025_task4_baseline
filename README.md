@@ -44,10 +44,8 @@ wget -P checkpoint https://github.com/nttcslab/m2d/releases/download/v0.3.0/m2d_
 unzip checkpoint/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly.zip -d checkpoint
 
 # Baseline checkpoints
-cd dcase2025_task4_baseline
-wget -P checkpoint UPDATING/m2dat.ckpt
-wget -P checkpoint UPDATING/resunet.ckpt
-wget -P checkpoint UPDATING/resunetk.ckpt
+# checkpoint/m2dat.ckpt, checkpoint/resunet.ckpt, checkpoint/resunetk.ckpt
+# Pretrained baseline checkpoints can be downloaded from the release [UPDATING]
 ```
 
 ### Data
@@ -56,9 +54,8 @@ DCASE2025Task4Dataset
 # Download
 UPDATING
 
-# Create a symlink to source directory
 cd dcase2025_task4_baseline
-ln -s /path/to/DCASE2025Task4Dataset data
+cp -r /path/to/DCASE2025Task4Dataset/* data/
 ```
 Add data from other datasets
 ```
@@ -129,6 +126,3 @@ If you use this system, please cite the following papers:
 + Binh Thien Nguyen, Masahiro Yasuda, Daiki Takeuchi, Daisuke Niizumi, Yasunori Ohishi, Noboru Harada, ”Baseline Systems and Evaluation Metrics for Spatial Semantic Segmentation of Sound Scenes,” in arXiv preprint arXiv 2503.22088, 2025, available at [URL](https://arxiv.org/abs/2503.22088).
 
 + Masahiro Yasuda, Binh Thien Nguyen, Noboru Harada, Romain Serizel, Mayank Mishra, Marc Delcroix, Shoko Araki, Daiki Takeuchi, Daisuke Niizumi, Yasunori Ohishi, Tomohiro Nakatani, Takao Kawamura, Nobutaka Ono, ”Description and discussion on DCASE 2025 challenge task 4: Spatial Semantic Segmentation of Sound Scenes,” in arXiv preprint arXiv:xxxx.xxxx, 2025, available at [URL]().
-
-# References
-UPDATING
