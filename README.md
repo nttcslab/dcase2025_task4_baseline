@@ -52,6 +52,7 @@ unzip checkpoint/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly.zip -d c
 DCASE2025Task4Dataset
 ```
 # Download
+# https://zenodo.org/10.5281/zenodo.15117227
 UPDATING
 
 cd dcase2025_task4_baseline
