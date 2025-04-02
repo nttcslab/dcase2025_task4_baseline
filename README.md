@@ -41,6 +41,7 @@ data
 The `config`, `metadata`, `noise`, `room_ir`, and `sound_event` folders are used for generating the training data, including the train and validation splits.\
 The `test` folder contains the test data for evaluating the model checkpoints, including the pre-mixed soundscapes in `soundscape` and the oracle target sources in `oracle_target`.
 
+The DCASE2025Task4Dataset: A Dataset for Spatial Semantic Segmentation of Sound Scenes is available at [https://zenodo.org/records/15117227](https://zenodo.org/records/15117227).
 
 ### Related Repositories
 Part of `src/models/resunet` originates from  https://github.com/bytedance/uss/tree/master/uss/models \
