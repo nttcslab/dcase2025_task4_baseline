@@ -1,6 +1,6 @@
 # Spatial Semantic Segmentation of Sound Scenes
 
-This is a baseline implementation for the [DCASE2025 Challenge Task 4: Spatial Semantic Segmentation of Sound Scenes]().
+This is a baseline implementation for the [DCASE2025 Challenge Task 4: Spatial Semantic Segmentation of Sound Scenes](https://dcase.community/challenge2025/task-spatial-semantic-segmentation-of-sound-scenes).
 
 [DCASE2025 Challenge](https://dcase.community/challenge2025/index) provides an overview of the challenge tasks.
 
