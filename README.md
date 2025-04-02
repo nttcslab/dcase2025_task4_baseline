@@ -150,7 +150,8 @@ python -m src.train -c config/separation/resunetk.yaml -w workspace/separation
 
 ## Evaluating Baseline Checkpoints
 There are three checkpoints for the two baseline systems, corresponding to the ATg model and two variants of the SS models described above.
-These can be downloaded from the release [UPDATING] and placed in the checkpoint folder.
+These can be downloaded from the release [version e.g., v1.0.0] and placed in the checkpoint folder.
+URL:[https://github.com/nttcslab/dcase2025_task4_baseline/releases/download/v1.0.0/baseline_checkpoint.zip](https://github.com/nttcslab/dcase2025_task4_baseline/releases/download/v1.0.0/baseline_checkpoint.zip).
 
 Class-aware Signal-to-Distortion Ratio (CA-SDRi) and label prediction accuracy can be calculated on the data/dev_set/test data using the baseline checkpoints as
 ```
