@@ -66,7 +66,7 @@ lightning_module:
             module: src.models.m2dat.m2dat
             main: M2dAt
             args:
-                weight_file: ckpt/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth
+                weight_file: checkpoint/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth
                 finetuning_layers: 2_blocks # may change
                 num_classes: 18
                 ref_channel: 0

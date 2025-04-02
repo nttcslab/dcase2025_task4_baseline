@@ -12,7 +12,7 @@ def verify_source_structure(source_dir):
     assert os.path.isdir(os.path.join(source_dir, 'src')), f'Missing folder: src'
     print('src: OK', flush=True)
 
-    assert os.path.isfile(os.path.join(source_dir, 'ckpt/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth')), f'Missing checkpoint: ckpt/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth'
+    assert os.path.isfile(os.path.join(source_dir, 'checkpoint/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth')), f'Missing checkpoint: checkpoint/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth'
     print('M2D checkpoint: OK', flush=True)
 
     assert os.path.isdir(os.path.join(source_dir, 'data')), f'Missing folder: data'

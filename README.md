@@ -40,14 +40,14 @@ sudo apt-get update && sudo apt-get install -y gcc g++ sox libsox-dev
 ```
 # M2D model checkpoint
 cd dcase2025_task4_baseline
-wget -P ckpt https://github.com/nttcslab/m2d/releases/download/v0.3.0/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly.zip
-unzip ckpt/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly.zip -d ckpt
+wget -P checkpoint https://github.com/nttcslab/m2d/releases/download/v0.3.0/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly.zip
+unzip checkpoint/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly.zip -d checkpoint
 
 # Baseline checkpoints
 cd dcase2025_task4_baseline
-wget -P ckpt UPDATING/m2dat.ckpt
-wget -P ckpt UPDATING/resunet.ckpt
-wget -P ckpt UPDATING/resunetk.ckpt
+wget -P checkpoint UPDATING/m2dat.ckpt
+wget -P checkpoint UPDATING/resunet.ckpt
+wget -P checkpoint UPDATING/resunetk.ckpt
 ```
 
 ### Data
