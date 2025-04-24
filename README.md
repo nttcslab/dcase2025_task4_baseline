@@ -148,6 +148,167 @@ python -m src.train -c config/separation/resunet.yaml -w workspace/separation
 python -m src.train -c config/separation/resunetk.yaml -w workspace/separation
 ```
 
+### Training hyperparameters
+
+Some hyperparameters that affect training time and performance can be set in the YAML configuration files
+- `dataset_length` in `train_dataloader`: Since each training mixture is generated randomly and independently, `dataset_length` can be set arbitrarily. A higher value increases the number of training steps per epoch and may slightly speed up training by reducing the frequency of validation.
+- `batch_size` in `train_dataloader`: When using N GPUs, the effective batch size becomes `N * batch_size`. We found that a larger batch size positively impacts audio tagging model training, but it also increases the training time.
+- `num_workers` in `train_dataloader`: Each training mixture loads and mixes 3 to 6 audio samples, which can be time-consuming. `num_workers` should be set based on the number of GPUs and CPU cores to optimize the dataloading process.
+- `lr` in `optimizer`: The learning rate should be adjusted based on the effective batch size, which changes with the number of GPUs or the `batch_size` in `train_dataloader`.
+
+Each baseline checkpoint was trained on 8 RTX 3090 GPUs in under 3 days.
+However, we found that with appropriate hyperparameter settings, similar results can be achieved using fewer GPUs in a comparable amount of time.
+Examples of configuration files for training with fewer GPUs can be found in `config/variants/`.
+The training times and results for these configurations are as follows
+
+<h4 align="center">AUDIO TAGGING</h4>
+<table  style="text-align: center;">
+    <tfoot><tr><td colspan="7" style="text-align: left;">Configuration can be found at "config/variants/label".</td></tr></tfoot>
+    <tr>
+        <th rowspan=2>Config</tH>
+        <th rowspan=2>CPU</th>
+        <th rowspan=2>GPU</th>
+        <th colspan=3>Training time (hours)</th>
+        <th rowspan=2>Label prediction <br> accuracy (%)</th>
+    </tr>
+    <tr>
+        <th>m2dat_head</th>
+        <th>m2dat_head_blks</th>
+        <th>total</th>
+    </tr>
+    <tr style="background-color: #f0f0f0;">
+        <td>Baseline</td>
+        <td>2x AMD EPYC 7343</td>
+        <td>8 x 3090 (VRAM 24 GB)</td>
+        <td>26</td>
+        <td>10</td>
+        <td>36</td>
+        <td>59.8</td>
+    </tr>
+    <tr>
+        <td>bs32_1gpu</td>
+        <td>Intel Xeon Gold 5218</td>
+        <td>1 x V100 (VRAM 32 GB)</td>
+        <td>13</td>
+        <td>15</td>
+        <td>28</td>
+        <td>63.3</td>
+    </tr>
+    <tr>
+        <td>bs32_2gpu</td>
+        <td>Intel Xeon Gold 5218</td>
+        <td>2 x V100 (VRAM 32 GB)</td>
+        <td>9</td>
+        <td>20</td>
+        <td>29</td>
+        <td>60.7</td>
+    </tr>
+    <tr>
+        <td>bs128_1gpu</td>
+        <td>AMD EPYC 7413</td>
+        <td>1 x A100 (VRAM 80 GB)</td>
+        <td>36</td>
+        <td>20</td>
+        <td>56</td>
+        <td>57.4</td>
+    </tr>
+    <tr>
+        <td>bs128_2gpu</td>
+        <td>AMD EPYC 7413</td>
+        <td>2 x A100 (VRAM 80 GB)</td>
+        <td>15</td>
+        <td>13</td>
+        <td>28</td>
+        <td>58.2</td>
+    </tr>
+</table>
+
+<h4 align="center">SEPARATION</h4>
+<table style="text-align: center;">
+    <tfoot><tr><td colspan="9" style="text-align: left;">Configuration can be found at "config/variants/separation". <br>Baseline checkpoint of the audio tagging model is used to calculate all the CA-SDRi.</td></tr></tfoot>
+    <tr>
+        <th rowspan=2>Config</th>
+        <th rowspan=2>CPU</th>
+        <th rowspan=2>GPU</th>
+        <th colspan=6>CA-SDRi (dB) at Training time (hours) </th>
+    </tr>
+    <tr>
+        <th>36h</th>
+        <th>48h</th>
+        <th>72h</th>
+        <th>96h</th>
+        <th>120h</th>
+        <th>144h</th>
+    </tr>
+    <tr style="background-color: #f0f0f0;">
+        <td>resunet (baseline)</td>
+        <td>2 x AMD EPYC 7343</td>
+        <td>8 x 3090 (VRAM 24 GB)</td>
+        <td></td>
+        <td></td>
+        <td>11.03</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tr>
+        <tr style="background-color: #f0f0f0;">
+        <td>resunetk (baseline)</td>
+        <td>2 x AMD EPYC 7343</td>
+        <td>8 x 3090 (VRAM 24 GB)</td>
+        <td></td>
+        <td></td>
+        <td>11.09</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>resunet_bs6</td>
+        <td>Intel Xeon Gold 5218</td>
+        <td>2 x V100 (VRAM 32 GB)</td>
+        <td>10.23</td>
+        <td>10.65</td>
+        <td>10.69</td>
+        <td>11.31</td>
+        <td>11.05</td>
+        <td>11.26</td>
+    </tr>
+    <tr>
+        <td>resunet_bs16</td>
+        <td>AMD EPYC 7413</td>
+        <td>1 x A100 (VRAM 80 GB)</td>
+        <td>10.46</td>
+        <td>10.63</td>
+        <td>11.13</td>
+        <td>11.15</td>
+        <td>11.39</td>
+        <td>11.42</td>
+    </tr>
+    <tr>
+        <td>resunetk_bs6</td>
+        <td>Intel Xeon Gold 5218</td>
+        <td>2 x V100 (VRAM 32 GB)</td>
+        <td>10.21</td>
+        <td>10.30</td>
+        <td>10.74</td>
+        <td>10.95</td>
+        <td>11.18</td>
+        <td>11.10</td>
+    </tr>
+    <tr>
+        <td>resunetk_bs16</td>
+        <td>AMD EPYC 7413</td>
+        <td>1 x A100 (VRAM 80 GB)</td>
+        <td>10.45</td>
+        <td>10.56</td>
+        <td>10.89</td>
+        <td>11.14</td>
+        <td>11.40</td>
+        <td>11.12</td>
+    </tr>
+</table>
+
 
 ## Evaluating Baseline Checkpoints
 There are three checkpoints for the two baseline systems, corresponding to the ATg model and two variants of the SS models described above.
