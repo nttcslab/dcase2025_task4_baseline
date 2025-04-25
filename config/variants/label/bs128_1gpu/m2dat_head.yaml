@@ -1,0 +1,132 @@
+---
+task_name: __
+description: __
+
+deterministic: true
+manual_seed: 0
+
+datamodule:
+    module: src.datamodules.datamodule
+    main: DataModule
+    args:
+        train_dataloader:
+            batch_size: 128
+            num_workers: 24
+            persistent_workers: false
+            dataset:
+                module: src.datamodules.dataset.s5.dataset_s5
+                main: DatasetS5
+                args:
+                    config:
+                        spatialscaper:
+                            foreground_dir: "data/dev_set/sound_event/train"
+                            background_dir: "data/dev_set/noise/train"
+                            rir_dir: "data/dev_set/room_ir/train"
+                            interference_dir: "data/dev_set/interference/train"
+                            duration: 10.0
+                            sr: 32000
+                            max_event_overlap: 3
+                            ref_db: -50
+                            return_dry: false
+                            return_wet: false
+                            return_ir: false
+                            return_background: false
+                            ref_channel: -1
+                            spatialize_direct_path_time_ms: null
+                        snr_range: [5, 20]
+                        nevent_range: [1, 3]
+                        inteference_snr_range: [0, 15]
+                        ninterference_range: [1, 2]
+                        dataset_length: 9984
+                        shuffle_label: false
+                    n_sources: 3
+                    label_set: dcase2025t4
+                    return_dry: false
+                    label_vector_mode: multihot
+                    checking: false
+        val_dataloader:
+            batch_size: 16
+            num_workers: 8
+            persistent_workers: false
+            dataset:
+                module: src.datamodules.dataset.s5.dataset_s5
+                main: DatasetS5
+                args:
+                    config: 'data/dev_set/metadata/valid.json'
+                    n_sources: 3
+                    label_set: dcase2025t4
+                    return_dry: false
+                    label_vector_mode: multihot
+                    checking: false
+lightning_module:
+    module: src.training.lightningmodule.audio_tagging
+    main: AudioTagging
+    args:
+        model:
+            module: src.models.m2dat.m2dat
+            main: M2dAt
+            args:
+                weight_file: checkpoint/m2d_as_vit_base-80x1001p16x16p32k-240413_AS-FT_enconly/weights_ep69it3124-0.47998.pth
+                finetuning_layers: head
+                num_classes: 18
+                ref_channel: 0
+        loss:
+            module: src.training.loss.bce
+            main: get_loss_func
+        optimizer:
+            module: torch.optim
+            main: AdamW
+            args:
+                params: null # assigned in src.training.label_query_separation
+                lr: 0.001
+                betas: [0.9, 0.999]
+                eps: 0.00000001
+                weight_decay: 0.0
+                amsgrad: true
+        is_validation: true
+train:
+    callbacks:
+        -
+            name: checkpoint
+            module: lightning.pytorch.callbacks
+            main: ModelCheckpoint
+            args:
+                every_n_epochs: 1
+                filename: "{epoch}"
+                save_top_k: 1
+                save_last: True
+                monitor: epoch_val/loss # check log in src.training.label_query_separation
+                mode: min
+                verbose: False
+                dirpath: null # Assigned in src.train
+        -
+            name: tqdm
+            module: lightning.pytorch.callbacks
+            main: TQDMProgressBar
+            args:
+                refresh_rate: 1
+                process_position: 0
+    trainer:
+        module: lightning.pytorch
+        main: Trainer
+        args:
+            accelerator: auto
+            devices: auto
+            strategy: ddp_find_unused_parameters_true
+            num_nodes: 1
+            precision: 32-true
+            logger: null
+            fast_dev_run: False
+            max_epochs: 300
+            log_every_n_steps: 100
+            use_distributed_sampler: True
+            sync_batchnorm: True
+            check_val_every_n_epoch: 1
+            val_check_interval: 1.0
+            num_sanity_val_steps: 0
+            enable_checkpointing: True
+            enable_progress_bar: True
+            enable_model_summary: True
+            limit_train_batches: null
+            limit_val_batches: null
+            gradient_clip_val: 0.5
