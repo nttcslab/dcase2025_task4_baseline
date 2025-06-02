@@ -1,0 +1,10 @@
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.z01
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.z02
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.z03
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.z04
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.z05
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.z06
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.z07
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.z08
+https://zenodo.org/records/15553984/files/DCASE2025Task4EvaluationDataset.zip
+https://zenodo.org/records/15553984/files/LISENCEv2.2.pdf

@@ -34,14 +34,32 @@ data
     |-- sound_event
     |   |-- train
     |   `-- valid
+    |-- interference
+    |   |-- train
+    |   `-- valid
     `-- test
         |-- oracle_target
         `-- soundscape
 ```
-The `config`, `metadata`, `noise`, `room_ir`, and `sound_event` folders are used for generating the training data, including the train and validation splits.\
+The `config`, `metadata`, `noise`, `room_ir`, `interference`, and `sound_event` folders are used for generating the training data, including the train and validation splits.\
 The `test` folder contains the test data for evaluating the model checkpoints, including the pre-mixed soundscapes in `soundscape` and the oracle target sources in `oracle_target`.
 
 The DCASE2025Task4Dataset: A Dataset for Spatial Semantic Segmentation of Sound Scenes is available at [https://zenodo.org/records/15117227](https://zenodo.org/records/15117227).
+
+### Evaluation dataset folder structure
+The DCASE2025Task4EvaluationDataset : The Evaluation Dataset for Spatial Semantic Segmentation of Sound Scenes is availabel at https://zenodo.org/records/15553984.
+The structure of the Evaluation dataset (`data/eval_set`) is as follows:
+```
+data
+|-- dev_set
+`-- eval_set
+    `-- soundscape
+        |-- eval_0001.wav
+        |-- ...
+        `-- eval_2289.wav
+```
+The soundscape folder contains 2,290 multichannel audio mixtures, either synthesized or real recordings.
+The first 1,620 samples are used for Challenge ranking, while the remaining samples are used for analysis.
 
 ### Related Repositories
 Part of `src/models/resunet` originates from  https://github.com/bytedance/uss/tree/master/uss/models \
@@ -87,9 +105,8 @@ wget -i dev_set_zenodo.txt
 zip -s 0 DCASE2025Task4Dataset.zip --out unsplit.zip
 unzip unsplit.zip
 
-# Place the dev_set in dcase2025_task4_bas/data folder
-ln -s "$(pwd)/final_0402_1/DCASE2025Task4Dataset/dev_set" /path/to/dcase2025_task4_bas
-eline/data
+# Place the dev_set in dcase2025_task4_baseline/data folder
+ln -s "$(pwd)/final_0402_1/DCASE2025Task4Dataset/dev_set" /path/to/dcase2025_task4_baseline/data
 ```
 In addition to the recorded data, sound events are also added from other dataset as
 ```
@@ -340,6 +357,39 @@ python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunetk.ya
 python -m src.evaluation.evaluate -c src/evaluation/eval_configs/m2d_resunet.yaml --generate_waveform
 ```
 To evaluate other model checkpoints, specify their paths under `tagger_ckpt` and `separator_ckpt` in the corresponding config files located in `src/evaluation/eval_configs`.
+
+## Generate Audio Files for Final Submission
+Download evaluation dataset
+```
+# Download all files from https://zenodo.org/records/15553984 and unzip
+wget -i eval_set_zenodo.txt
+zip -s 0 DCASE2025Task4EvaluationDataset.zip --out eval_set_full.zip
+unzip eval_set_full.zip
+
+# Place the DCASE2025Task4EvaluationDataset/eval_set/soundscape in dcase2025_task4_baseline/data/eval_set/soundscape folder
+ln -s "$(pwd)/DCASE2025Task4EvaluationDataset/eval_set" "/home/nguyenbt/code/github/dcase2025_task4_baseline/data"
+```
+
+Audio files can be generated using:
+```
+bash generate_waveform.sh --config "src/evaluation/gen_wav_configs/m2d_resunetk.yaml" --output_dir data/eval_set --author Nguyen --affiliation NTT --submission_number 1
+# output: data/eval_set/Nguyen_NTT_task4_1_out.zip
+
+bash generate_waveform.sh --config "src/evaluation/gen_wav_configs/m2d_resunet.yaml" --output_dir data/eval_set --author Nguyen --affiliation NTT --submission_number 2
+# output: data/eval_set/Nguyen_NTT_task4_2_out.zip
+```
+These commands will generate audio files in the specified `output_dir`, and then create the zip files, `Nguyen_NTT_task4_1_out.zip` and `Nguyen_NTT_task4_2_out.zip`, which are ready for the submission.
+
+# Release Notes
+
+- **v1.1.0**  
+  This version provides support for processing the Evaluation dataset.
+- **v1.0.1**  
+  Some config variants are added, reflecting other conditions related to the GPU type and the number of GPUs.
+
+- **v1.0.0**  
+  This is the first release of the baseline system implementation for the DCASE2025 Challenge Task 4: Spatial Semantic Segmentation of Sound Scenes (DCASE2025T4).
+
 # Citation
 
 If you use this system, please cite the following papers:
