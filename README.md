@@ -367,7 +367,7 @@ zip -s 0 DCASE2025Task4EvaluationDataset.zip --out eval_set_full.zip
 unzip eval_set_full.zip
 
 # Place the DCASE2025Task4EvaluationDataset/eval_set/soundscape in dcase2025_task4_baseline/data/eval_set/soundscape folder
-ln -s "$(pwd)/DCASE2025Task4EvaluationDataset/eval_set" "/home/nguyenbt/code/github/dcase2025_task4_baseline/data"
+ln -s "$(pwd)/DCASE2025Task4EvaluationDataset/eval_set" "/path/to/dcase2025_task4_baseline/data"
 ```
 
 Audio files can be generated using:
@@ -381,12 +381,12 @@ bash generate_waveform.sh --config "src/evaluation/gen_wav_configs/m2d_resunet.y
 These commands will generate audio files in the specified `output_dir`, and then create the zip files, `Nguyen_NTT_task4_1_out.zip` and `Nguyen_NTT_task4_2_out.zip`, which are ready for the submission.
 
 # Release Notes
-
+- **v1.1.1**  
+  Update the evaluation dataset download instruction.
 - **v1.1.0**  
   This version provides support for processing the Evaluation dataset.
 - **v1.0.1**  
   Some config variants are added, reflecting other conditions related to the GPU type and the number of GPUs.
-
 - **v1.0.0**  
   This is the first release of the baseline system implementation for the DCASE2025 Challenge Task 4: Spatial Semantic Segmentation of Sound Scenes (DCASE2025T4).
 
