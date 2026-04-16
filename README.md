@@ -380,6 +380,9 @@ bash generate_waveform.sh --config "src/evaluation/gen_wav_configs/m2d_resunet.y
 ```
 These commands will generate audio files in the specified `output_dir`, and then create the zip files, `Nguyen_NTT_task4_1_out.zip` and `Nguyen_NTT_task4_2_out.zip`, which are ready for the submission.
 
+# License 
+This project is licensed under the terms described in [LICENSEv2.2.pdf](LICENSEv2.2.pdf).
+
 # Release Notes
 - **v1.1.1**  
   Update the evaluation dataset download instruction.
